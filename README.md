@@ -255,28 +255,6 @@ Sem Docker? Instale o PostgreSQL, crie o banco `mercado_express` (`CREATE DATABA
 
 ---
 
-## 8. Deploy no Render
-
-O projeto já tem `Dockerfile` e `render.yaml` (Blueprint).
-
-**Opção A — Blueprint (automático)**
-1. Suba esta pasta como **raiz** de um repositório no GitHub.
-2. No Render: **New → Blueprint** → selecione o repositório.
-3. O Render cria o PostgreSQL `mercado-express-db` e o Web Service, liga as variáveis `DB_*` e pede o valor de `ADMIN_SENHA`.
-4. Aguarde o build (5 a 10 minutos) e abra a URL `https://mercado-express-security-xxxx.onrender.com`.
-
-**Opção B — manual**
-1. **New → PostgreSQL** (plano Free) e copie *Hostname* (interno), *Port*, *Database*, *Username* e *Password*.
-2. **New → Web Service** → repositório → *Runtime*: **Docker**.
-3. Em *Environment* crie `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` e `ADMIN_SENHA`.
-4. **Create Web Service**.
-
-> No plano gratuito o serviço "dorme" após 15 min sem acesso; o primeiro acesso depois disso leva cerca de 1 minuto.
-
-![Deploy no Render](docs/prints/10-render.png)
-
----
-
 ## 9. Tecnologias
 
 Java 17 · Spring Boot 3.5 · Spring MVC · Spring Security 6 · Spring Data JPA / Hibernate · Bean Validation · Thymeleaf + thymeleaf-extras-springsecurity6 · Lombok · PostgreSQL 16 · Docker · Render
