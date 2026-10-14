@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Não encontrado')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+<main class="container">
+    <div class="vazio mt">
+        <h1>Produto não encontrado</h1>
+        <p class="muted" th:text="${mensagem}">O produto pode ter sido excluído.</p>
+        <a class="btn btn-primary" th:href="@{/produtos}">Ver todos os produtos</a>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

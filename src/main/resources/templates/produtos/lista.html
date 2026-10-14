@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Produtos')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <div>
+            <h1>Produtos</h1>
+            <p><span th:text="${#lists.size(produtos)}">0</span> itens encontrados</p>
+        </div>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/produtos/novo}">Cadastrar produto</a>
+    </div>
+
+    <div th:replace="~{fragments/layout :: mensagens}"></div>
+
+    <form class="filtros" th:action="@{/produtos}" method="get" role="search">
+        <div class="campo">
+            <label for="busca">Buscar pelo nome</label>
+            <input type="text" id="busca" name="busca" th:value="${busca}" placeholder="Ex.: café, leite, arroz">
+        </div>
+        <div class="campo">
+            <label for="categoria">Categoria</label>
+            <select id="categoria" name="categoria">
+                <option value="">Todas as categorias</option>
+                <option th:each="c : ${categorias}" th:value="${c}" th:text="${c.descricao}"
+                        th:selected="${c == categoriaSelecionada}">Categoria</option>
+            </select>
+        </div>
+        <div class="acoes">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a class="btn btn-ghost" th:href="@{/produtos}">Limpar</a>
+        </div>
+    </form>
+
+    <div class="vazio" th:if="${#lists.isEmpty(produtos)}">
+        <h3>Nenhum produto encontrado</h3>
+        <p class="muted">Tente outro nome ou escolha "Todas as categorias".</p>
+        <a sec:authorize="hasRole('ADMIN')" class="btn btn-primary" th:href="@{/produtos/novo}">Cadastrar produto</a>
+    </div>
+
+    <div class="gondola" th:unless="${#lists.isEmpty(produtos)}">
+        <article class="produto" th:each="p : ${produtos}" th:classappend="${!p.ativo} ? 'inativo'">
+            <p class="produto-cat" th:text="${p.categoria.descricao}">Categoria</p>
+            <h3><a th:href="@{/produtos/{id}(id=${p.id})}" th:text="${p.nome}">Produto</a></h3>
+            <div>
+                <span class="etiqueta">
+                    <span class="moeda">R$</span>
+                    <span th:text="${#numbers.formatDecimal(p.precoVenda, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                    <span class="por" th:text="'/' + ${p.unidade}">/un</span>
+                </span>
+            </div>
+            <div class="acoes">
+                <span class="selo" th:classappend="${p.estoqueBaixo} ? 'selo-alerta' : 'selo-ok'"
+                      th:text="${p.quantidadeEstoque} + ' em estoque'">0 em estoque</span>
+                <span class="selo" th:unless="${p.ativo}">Inativo</span>
+            </div>
+            <div class="produto-rodape">
+                <a class="btn btn-outline btn-sm" th:href="@{/produtos/{id}(id=${p.id})}">Ver detalhes</a>
+                <span class="acoes" sec:authorize="hasRole('ADMIN')">
+                    <a class="btn btn-ghost btn-sm" th:href="@{/produtos/{id}/editar(id=${p.id})}">Editar</a>
+                    <form th:action="@{/produtos/{id}/excluir(id=${p.id})}" method="post" class="inline"
+                          th:data-nome="${p.nome}"
+                          onsubmit="return confirm('Excluir o produto ' + this.dataset.nome + '?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                    </form>
+                </span>
+            </div>
+        </article>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

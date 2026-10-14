@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Acesso restrito')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+<main class="container">
+    <div class="vazio mt">
+        <h1>Área exclusiva do gerente</h1>
+        <p class="muted">Sua conta é de cliente, então esta página não está disponível.
+           Você continua podendo consultar todos os produtos.</p>
+        <a class="btn btn-primary" th:href="@{/produtos}">Ir para os produtos</a>
+    </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Criar conta')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main class="auth">
+    <section class="auth-lado">
+        <h1>Crie sua conta e consulte a gôndola inteira.</h1>
+        <p>Novas contas entram como <strong>Cliente</strong>: acesso ao catálogo, à busca e aos
+           detalhes dos produtos. O gerente pode promover contas no painel.</p>
+    </section>
+
+    <section class="auth-form-area">
+        <div class="auth-card">
+            <h2>Criar conta</h2>
+
+            <div class="alerta-msg alerta-info" th:if="${param.naoCadastrado}">
+                Não encontramos uma conta com esse e-mail. Preencha os dados abaixo para se cadastrar.
+            </div>
+
+            <form th:action="@{/cadastro}" th:object="${form}" method="post" novalidate>
+                <div class="campo" th:classappend="${#fields.hasErrors('nome')} ? 'campo-erro'">
+                    <label for="nome">Nome completo</label>
+                    <input type="text" id="nome" th:field="*{nome}" autocomplete="name" required>
+                    <span class="erro-campo" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('email')} ? 'campo-erro'">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" th:field="*{email}" autocomplete="email" required>
+                    <span class="erro-campo" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('telefone')} ? 'campo-erro'">
+                    <label for="telefone">Telefone <span class="muted">(opcional)</span></label>
+                    <input type="tel" id="telefone" th:field="*{telefone}" autocomplete="tel" placeholder="(11) 91234-5678">
+                    <span class="erro-campo" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('senha')} ? 'campo-erro'">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" th:field="*{senha}" autocomplete="new-password" required>
+                    <span class="dica">Pelo menos 6 caracteres.</span>
+                    <span class="erro-campo" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></span>
+                </div>
+                <div class="campo" th:classappend="${#fields.hasErrors('confirmarSenha')} ? 'campo-erro'">
+                    <label for="confirmarSenha">Repita a senha</label>
+                    <input type="password" id="confirmarSenha" th:field="*{confirmarSenha}" autocomplete="new-password" required>
+                    <span class="erro-campo" th:if="${#fields.hasErrors('confirmarSenha')}" th:errors="*{confirmarSenha}"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+            </form>
+
+            <p class="auth-troca">Já tem conta? <a th:href="@{/login}">Entrar</a></p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Painel do gerente')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <div>
+            <h1>Painel do gerente</h1>
+            <p>Visão rápida do estoque e dos usuários do Mercado Express.</p>
+        </div>
+        <div class="acoes">
+            <a class="btn btn-primary" th:href="@{/produtos/novo}">Cadastrar produto</a>
+            <a class="btn btn-ghost" th:href="@{/admin/usuarios}">Gerenciar usuários</a>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: mensagens}"></div>
+
+    <div class="grade grade-4">
+        <div class="indicador">
+            <p class="indicador-rotulo">Produtos cadastrados</p>
+            <p class="indicador-valor" th:text="${totalProdutos}">0</p>
+        </div>
+        <div class="indicador destaque">
+            <p class="indicador-rotulo">Valor em estoque (custo)</p>
+            <p class="indicador-valor" th:text="'R$ ' + ${#numbers.formatDecimal(valorEstoque, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</p>
+        </div>
+        <div class="indicador" th:classappend="${!#lists.isEmpty(estoqueBaixo)} ? 'alerta'">
+            <p class="indicador-rotulo">Itens com estoque baixo</p>
+            <p class="indicador-valor" th:text="${#lists.size(estoqueBaixo)}">0</p>
+        </div>
+        <div class="indicador">
+            <p class="indicador-rotulo">Clientes / gerentes</p>
+            <p class="indicador-valor" th:text="${totalClientes} + ' / ' + ${totalAdmins}">0 / 0</p>
+        </div>
+    </div>
+
+    <div class="grade grade-2 mt">
+        <section class="painel">
+            <h2>Repor primeiro</h2>
+            <p class="muted small">Produtos com 5 unidades ou menos.</p>
+            <p th:if="${#lists.isEmpty(estoqueBaixo)}">Nenhum produto com estoque baixo.</p>
+            <div class="tabela-wrap" th:unless="${#lists.isEmpty(estoqueBaixo)}">
+                <table>
+                    <thead><tr><th>Produto</th><th class="num">Estoque</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${estoqueBaixo}">
+                        <td><a th:href="@{/produtos/{id}(id=${p.id})}" th:text="${p.nome}">Produto</a></td>
+                        <td class="num"><span class="selo selo-alerta" th:text="${p.quantidadeEstoque} + ' ' + ${p.unidade}">0</span></td>
+                        <td class="num"><a class="btn btn-ghost btn-sm" th:href="@{/produtos/{id}/editar(id=${p.id})}">Repor</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="painel">
+            <h2>Produtos por categoria</h2>
+            <p class="muted small">Quantidade de itens cadastrados em cada corredor.</p>
+            <div class="barra-linha" th:each="item : ${porCategoria}">
+                <span class="small" th:text="${item.key.descricao}">Categoria</span>
+                <div class="barra" role="img" th:attr="aria-label=${item.key.descricao} + ': ' + ${item.value}">
+                    <span th:style="${'width:' + (totalProdutos > 0 ? item.value * 100 / totalProdutos : 0) + '%'}"></span>
+                </div>
+                <span class="small num" th:text="${item.value}">0</span>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

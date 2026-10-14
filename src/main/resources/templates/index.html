@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Início')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main>
+    <section class="hero">
+        <div class="container hero-inner">
+            <div>
+                <h1>O mercadinho do bairro, aberto no seu navegador.</h1>
+                <p>Consulte preços, estoque e detalhes de cada produto do Mercado Express.
+                   Gerentes cadastram e atualizam a gôndola em tempo real.</p>
+                <div class="acoes">
+                    <th:block sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-tag" th:href="@{/login}">Entrar</a>
+                        <a class="btn btn-outline" th:href="@{/cadastro}">Criar minha conta</a>
+                    </th:block>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <a class="btn btn-tag" th:href="@{/produtos}">Ver produtos</a>
+                        <a sec:authorize="hasRole('ADMIN')" class="btn btn-outline" th:href="@{/admin/dashboard}">Abrir painel</a>
+                    </th:block>
+                </div>
+            </div>
+            <div class="hero-etiquetas" aria-hidden="true">
+                <span class="etiqueta"><span class="moeda">R$</span>6,49 <span class="por">/kg banana</span></span>
+                <span class="etiqueta"><span class="moeda">R$</span>5,49 <span class="por">leite 1L</span></span>
+                <span class="etiqueta"><span class="moeda">R$</span>16,90 <span class="por">/kg pão francês</span></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="secao">
+        <div class="container">
+            <h2>Corredores</h2>
+            <p class="muted">
+                <span th:text="${totalProdutos}">0</span> produtos cadastrados, organizados por categoria.
+            </p>
+            <div class="corredores">
+                <span class="corredor" th:each="c : ${categorias}" th:text="${c.descricao}">Categoria</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="secao">
+        <div class="container">
+            <h2>Como funciona</h2>
+            <div class="passos">
+                <div class="passo">
+                    <h3>Crie sua conta</h3>
+                    <p class="mb-0">Cadastre nome, e-mail e senha. A senha é guardada criptografada com BCrypt.</p>
+                </div>
+                <div class="passo">
+                    <h3>Entre no sistema</h3>
+                    <p class="mb-0">Clientes vão direto ao catálogo. Gerentes caem no painel do mercado.</p>
+                </div>
+                <div class="passo">
+                    <h3>Consulte e gerencie</h3>
+                    <p class="mb-0">Busque produtos por nome ou categoria. Gerentes cadastram, editam e excluem itens.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

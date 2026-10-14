@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Usuários')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <div>
+            <h1>Usuários</h1>
+            <p>Contas salvas na tabela <code>tds_users_mercado</code>. Promova clientes a gerente quando necessário.</p>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: mensagens}"></div>
+
+    <div class="tabela-wrap">
+        <table>
+            <thead>
+            <tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Criado em</th><th>Alterar perfil</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${usuarios}">
+                <td th:text="${u.nome}">Nome</td>
+                <td th:text="${u.email}">email</td>
+                <td><span class="selo" th:classappend="${u.perfil.name() == 'ADMIN'} ? 'selo-info' : 'selo-ok'"
+                          th:text="${u.perfil.descricao}">Perfil</span></td>
+                <td th:text="${#temporals.format(u.criadoEm, 'dd/MM/yyyy HH:mm')}">-</td>
+                <td>
+                    <form th:action="@{/admin/usuarios/{id}/perfil(id=${u.id})}" method="post" class="acoes">
+                        <select name="perfil" aria-label="Novo perfil" style="width:auto">
+                            <option th:each="p : ${perfis}" th:value="${p}" th:text="${p.descricao}"
+                                    th:selected="${p == u.perfil}">Perfil</option>
+                        </select>
+                        <button type="submit" class="btn btn-ghost btn-sm">Salvar perfil</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

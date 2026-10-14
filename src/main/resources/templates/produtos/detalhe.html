@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${produto.nome})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main class="container">
+    <div class="page-header">
+        <div>
+            <p><a th:href="@{/produtos}">Produtos</a> / <span th:text="${produto.categoria.descricao}">Categoria</span></p>
+            <h1 th:text="${produto.nome}">Produto</h1>
+        </div>
+        <div class="acoes" sec:authorize="hasRole('ADMIN')">
+            <a class="btn btn-outline" th:href="@{/produtos/{id}/editar(id=${produto.id})}">Editar produto</a>
+            <form th:action="@{/produtos/{id}/excluir(id=${produto.id})}" method="post" class="inline"
+                  onsubmit="return confirm('Excluir este produto? Esta ação não pode ser desfeita.');">
+                <button type="submit" class="btn btn-danger">Excluir produto</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: mensagens}"></div>
+
+    <div class="detalhe">
+        <section class="painel">
+            <span class="etiqueta etiqueta-grande">
+                <span class="moeda">R$</span>
+                <span th:text="${#numbers.formatDecimal(produto.precoVenda, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                <span class="por" th:text="'/' + ${produto.unidade}">/un</span>
+            </span>
+            <h3 class="mt">Descrição</h3>
+            <p th:text="${produto.descricao ?: 'Sem descrição cadastrada.'}">Descrição</p>
+            <div class="acoes">
+                <span class="selo" th:classappend="${produto.estoqueBaixo} ? 'selo-alerta' : 'selo-ok'"
+                      th:text="${produto.estoqueBaixo} ? 'Estoque baixo' : 'Disponível'">Disponível</span>
+                <span class="selo" th:classappend="${produto.ativo} ? 'selo-ok' : ''"
+                      th:text="${produto.ativo} ? 'Ativo na loja' : 'Inativo'">Ativo</span>
+            </div>
+        </section>
+
+        <section class="painel">
+            <h3>Ficha do produto</h3>
+            <dl class="ficha">
+                <dt>Código</dt><dd th:text="${produto.id}">1</dd>
+                <dt>Categoria</dt><dd th:text="${produto.categoria.descricao}">-</dd>
+                <dt>Unidade</dt><dd th:text="${produto.unidade}">un</dd>
+                <dt>Em estoque</dt><dd class="num" th:text="${produto.quantidadeEstoque}">0</dd>
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <dt>Preço de custo</dt>
+                    <dd class="num" th:text="'R$ ' + ${#numbers.formatDecimal(produto.precoCusto, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</dd>
+                    <dt>Lucro por unidade</dt>
+                    <dd class="num" th:text="'R$ ' + ${#numbers.formatDecimal(produto.lucroUnitario, 1, 'POINT', 2, 'COMMA')} + ' (' + ${produto.margemPercentual} + '%)'">R$ 0,00</dd>
+                </th:block>
+                <dt>Cadastrado em</dt>
+                <dd th:text="${produto.criadoEm != null} ? ${#temporals.format(produto.criadoEm, 'dd/MM/yyyy HH:mm')} : '-'">-</dd>
+                <dt>Atualizado em</dt>
+                <dd th:text="${produto.atualizadoEm != null} ? ${#temporals.format(produto.atualizadoEm, 'dd/MM/yyyy HH:mm')} : '-'">-</dd>
+            </dl>
+        </section>
+    </div>
+
+    <p class="mt"><a class="btn btn-ghost" th:href="@{/produtos}">Voltar para a lista</a></p>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

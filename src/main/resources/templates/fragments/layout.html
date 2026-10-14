@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' | Mercado Express'">Mercado Express</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header th:fragment="navbar" class="navbar">
+    <div class="container navbar-inner">
+        <a class="brand" th:href="@{/}" aria-label="Mercado Express - início">
+            <span class="brand-mark" aria-hidden="true">ME</span> Mercado Express
+        </a>
+        <nav class="nav-links" aria-label="Menu principal">
+            <a th:href="@{/}">Início</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/produtos}">Produtos</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/produtos/novo}">Cadastrar produto</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/dashboard}">Painel do gerente</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/usuarios}">Usuários</a>
+        </nav>
+        <div class="nav-user">
+            <th:block sec:authorize="isAuthenticated()">
+                <span class="user-chip">
+                    <span th:text="${#authentication.principal.primeiroNome}">Nome</span>
+                    <span class="selo"
+                          th:classappend="${#authentication.principal.admin} ? 'selo-info' : 'selo-ok'"
+                          th:text="${#authentication.principal.perfil.descricao}">Perfil</span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="inline">
+                    <button type="submit" class="btn btn-ghost btn-sm">Sair</button>
+                </form>
+            </th:block>
+            <th:block sec:authorize="!isAuthenticated()">
+                <a class="btn btn-ghost btn-sm" th:href="@{/login}">Entrar</a>
+                <a class="btn btn-primary btn-sm" th:href="@{/cadastro}">Criar conta</a>
+            </th:block>
+        </div>
+    </div>
+</header>
+
+<div th:fragment="mensagens">
+    <div class="alerta-msg alerta-sucesso" role="status" th:if="${sucesso}" th:text="${sucesso}"></div>
+    <div class="alerta-msg alerta-erro" role="alert" th:if="${erro}" th:text="${erro}"></div>
+</div>
+
+<footer th:fragment="footer" class="footer">
+    <div class="container">
+        <span>Mercado Express · CP5 Java Advanced · FIAP</span>
+        <span>Spring Boot + Spring Security + PostgreSQL</span>
+    </div>
+</footer>
+</body>
+</html>

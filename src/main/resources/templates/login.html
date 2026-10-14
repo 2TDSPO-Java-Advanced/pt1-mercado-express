@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Entrar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: navbar}"></header>
+
+<main class="auth">
+    <section class="auth-lado">
+        <span class="etiqueta etiqueta-grande"><span class="moeda">R$</span>0,00 <span class="por">para criar conta</span></span>
+        <h1>Bem-vindo de volta ao Mercado Express.</h1>
+        <p>Entre com o e-mail e a senha cadastrados. Se ainda não tiver conta,
+           levamos você direto para o cadastro.</p>
+    </section>
+
+    <section class="auth-form-area">
+        <div class="auth-card">
+            <h2>Entrar</h2>
+
+            <div class="alerta-msg alerta-sucesso" th:if="${sucesso}" th:text="${sucesso}"></div>
+            <div class="alerta-msg alerta-erro" role="alert" th:if="${param.erro}">
+                E-mail ou senha incorretos. Confira os dados e tente de novo.
+            </div>
+            <div class="alerta-msg alerta-erro" role="alert" th:if="${param.inativo}">
+                Esta conta está desativada. Fale com o gerente do mercado.
+            </div>
+            <div class="alerta-msg alerta-info" th:if="${param.logout}">
+                Você saiu da sua conta.
+            </div>
+
+            <!-- POST /login e processado pelo Spring Security (usernameParameter=email, passwordParameter=senha) -->
+            <form th:action="@{/login}" method="post">
+                <div class="campo">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required autofocus
+                           autocomplete="username" placeholder="nome@exemplo.com"
+                           th:value="${emailCadastrado}">
+                </div>
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required
+                           autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+            </form>
+
+            <p class="auth-troca">Ainda não tem conta?
+                <a th:href="@{/cadastro}">Cadastre-se</a></p>
+
+            <div class="contas-teste">
+                <p><strong>Contas para teste</strong></p>
+                <p>Gerente: admin@mercadoexpress.com · admin123</p>
+                <p>Cliente: cliente@mercadoexpress.com · cliente123</p>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
