@@ -6,7 +6,7 @@ Aplicação web do **Mercado Express**, um mercadinho de bairro, construída com
 
 | Item | Valor |
 |---|---|
-| Deploy (produção) | `https://SEU-SERVICO.onrender.com` ← trocar pelo link do Render |
+| Deploy (produção) | `https://mercado-express-security.onrender.com` |
 | IDE utilizada | IntelliJ IDEA |
 | Linguagem / Build | Java 17 · Maven |
 | Framework | Spring Boot 3.5.6 |
@@ -32,7 +32,7 @@ Projeto criado em <https://start.spring.io> com:
 - **Dependências:** Spring Web, Thymeleaf, Spring Security, Spring Data JPA, Validation, PostgreSQL Driver, Lombok, Spring Boot DevTools
   (ao escolher Thymeleaf + Security o Initializr adiciona sozinho o `thymeleaf-extras-springsecurity6`)
 
-![Configuração do Spring Initializr](docs/prints/01-spring-initializr.png)
+![Configuração do Spring Initializr](docs/prints/01-spring-.png)
 
 ---
 
